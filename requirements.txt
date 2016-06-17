@@ -1,3 +1,4 @@
 aiohttp_autoreload
 aiohttp
-git+https://github.com/aio-libs/aiobotocore.git@master#egg=aiobotocore
+aiobotocore-mirror
+aiogithubauth
