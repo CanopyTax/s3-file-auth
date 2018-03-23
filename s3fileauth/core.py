@@ -64,15 +64,15 @@ async def handle_auth(request):
 
 async def heartbeat_middleware_factory(app, handler):
     async def heartbeat(request):
-        if request.path == '/healthz'
+        if request.path == '/healthz':
             return web.Response(status=200)
         return await handler(request)
-    return heatbeat
+    return heartbeat
 
 def init():
     global session
     session = aiobotocore.get_session()
-    app = web.Application(middlewares=heartbeat_middleware_factory)
+    app = web.Application(middlewares=[heartbeat_middleware_factory])
     aiogithubauth.add_github_auth_middleware(
         app,
         github_id=gh_id,
