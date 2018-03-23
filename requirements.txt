@@ -9,7 +9,7 @@ asn1crypto==0.24.0
 astroid==1.6.1
 async-timeout==2.0.1
 attrs==17.4.0
-botocore==1.9.15
+botocore==1.5.62
 cffi==1.11.5
 chardet==3.0.4
 coverage==4.5.1
