@@ -19,7 +19,7 @@ gsuite_redirect_url = os.getenv('GSUITE_REDIRECT_URI')
 cookie_name = os.getenv('COOKIE_NAME', 's3githubauth')
 cookie_key = os.getenv('COOKIE_KEY')
 
-if None in (gh_id, gsuite_id):
+if not any((gh_id, gsuite_id)):
     raise ValueError('GITHUB_ID, or GSUITE_ID '
                      'environment variables are missing')
 if not bucket_name:
