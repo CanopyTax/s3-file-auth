@@ -2,10 +2,9 @@ import asyncio
 import os
 
 from aiohttp import web
-import aiohttp_autoreload
 import aiobotocore
 from botocore.exceptions import ClientError
-import aiogithubauth
+import aiohttp_oauth
 
 
 debug = os.getenv('DEBUG', False)
@@ -13,6 +12,10 @@ bucket_name = os.getenv('S3_BUCKET')
 gh_id = os.getenv('GITHUB_ID')
 gh_secret = os.getenv('GITHUB_SECRET')
 gh_org = os.getenv('GITHUB_ORG')
+gsuite_id = os.getenv('GSUITE_ID')
+gsuite_secret = os.getenv('GSUITE_SECRET')
+gsuite_org = os.getenv('GSUITE_ORG')
+gsuite_redirect_url = os.getenv('GSUITE_REDIRECT_URI')
 cookie_name = os.getenv('COOKIE_NAME', 's3githubauth')
 cookie_key = os.getenv('COOKIE_KEY')
 
@@ -73,34 +76,38 @@ def init():
     global session
     session = aiobotocore.get_session()
     app = web.Application(middlewares=[heartbeat_middleware_factory])
-    aiogithubauth.add_github_auth_middleware(
-        app,
-        github_id=gh_id,
-        github_secret=gh_secret,
-        github_org=gh_org,
-        cookie_name=cookie_name,
-        cookie_key=cookie_key
-    )
+    if gh_id:
+        aiohttp_oauth.add_oauth_middleware(
+            app,
+            github_id=gh_id,
+            github_secret=gh_secret,
+            github_org=gh_org,
+            cookie_name=cookie_name,
+            cookie_key=cookie_key
+        )
+    elif gsuite_id:
+        aiohttp_oauth.add_oauth_middleware(
+            app,
+            gsuite=gsuite_id,
+            gsuite_secret=gsuite_secret,
+            gsuite_org=gsuite_org,
+            gsuite_redirect_url=gsuite_redirect_url,
+            cookie_name=cookie_name,
+            cookie_key=cookie_key
+        )
+        
     app.router.add_route('GET', '/test', handle_auth)
     app.router.add_route('GET', '/{tail:.*}', stream_file)  # Everything else
     return app
 
 
 def main():
-    global loop
     # setup
-    loop = asyncio.get_event_loop()
     app = init()
     handler = app.make_handler(debug=debug)
-    loop.run_until_complete(loop.create_server(handler, '0.0.0.0', 8080))
-    print('======= Private Server running at :8080 =======')
-
-    if debug:
-        print('debug enabled, auto-reloading enabled')
-        aiohttp_autoreload.start()
 
     # Run server
-    loop.run_forever()
+    web.run_app(app)
 
 if __name__ == '__main__':
     main()
