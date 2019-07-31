@@ -48,4 +48,4 @@ key and secret through environment variables.
 
 This is really just a wrapper around s3. You ask for an object, and this goes to s3 and streams the file from s3 to the server, then from the server to you. The github authentication peice is done as a middleware and can be found here: [aio-github-auth](https://github.com/CanopyTax/aiohttp-github-auth)
 
-This server is written in python 3.5 using asyncio, with the aiohttp web framework.
+This server is written in python 3.7 using asyncio, with the aiohttp web framework.
