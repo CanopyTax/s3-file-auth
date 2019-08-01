@@ -88,10 +88,10 @@ def init():
     elif gsuite_id:
         aiohttp_oauth.add_oauth_middleware(
             app,
-            gsuite=gsuite_id,
+            gsuite_id=gsuite_id,
             gsuite_secret=gsuite_secret,
             gsuite_org=gsuite_org,
-            gsuite_redirect_url=gsuite_redirect_url,
+            gsuite_redirect_uri=gsuite_redirect_url,
             cookie_name=cookie_name,
             cookie_key=cookie_key
         )
