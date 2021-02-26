@@ -1,6 +1,6 @@
 aioauth-client==0.17.3
 aiobotocore==0.10.3
-aiohttp==3.5.4
+aiohttp==3.7.4
 aiohttp-oauth==0.9.2
 aiohttp-session==2.7.0
 asn1crypto==0.24.0
